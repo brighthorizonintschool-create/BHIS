@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Academic Calendar – Horizon Academy</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .calendar { max-width: 900px; margin: 2rem auto; }
+        .calendar-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; }
+        .calendar-header h2 { margin:0; }
+        .calendar-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:.5rem; }
+        .calendar-day { padding:.8rem; text-align:center; border-radius:.5rem; background:#fff; box-shadow:0 2px 6px rgba(0,0,0,.05); position:relative; }
+        .calendar-day.other-month { opacity:.3; }
+        .calendar-day.event { background:var(--accent); color:#fff; cursor:pointer; }
+        .calendar-day.event:hover { filter:brightness(.9); }
+
+        /* small label inside date */
+        .calendar-day .label {
+            font-size:.6rem;
+            background:#1f2d4a;
+            color:#fff;
+            border-radius:.3rem;
+            padding:2px 4px;
+            position:absolute;
+            bottom:4px;
+            left:50%;
+            transform:translateX(-50%);
+            white-space:nowrap;
+        }
+
+        .event-tooltip { position:absolute; background:#1f2d4a; color:#fff; padding:.5rem .75rem; border-radius:.4rem; font-size:.9rem; pointer-events:none; opacity:0; transition:opacity .2s; z-index:1000; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="header-inner">&nbsp; <a class="brand" href="index.html"> </a><img
+          src="NYC_2-removebg-preview.png" alt="" style="width: 94px; height: 81px;"><a
+          class="brand" href="index.html"><span>Bright Horizon International
+            School</span> </a>
+        <nav> <a href="index.html">Home</a> <a href="about.html">About</a> <a
+            href="programs.html">Programs</a> <a href="gallery.html">Gallery</a>
+          <a href="calendar.html">Calendar</a> <a href="admission.html">Admission</a>
+          <a href="contact.html">Contact</a> </nav>
+      </div>
+    </header>
+    <main>
+      <section class="container">
+        <h1>Academic Calendar</h1>
+        <p class="muted">Plan ahead with important term dates, holidays, and
+          school events.</p>
+        <div class="calendar">
+          <div class="calendar-header"> <button id="prevMonth" class="btn">←
+              Prev</button>
+            <h2 id="monthYear"></h2>
+            <button id="nextMonth" class="btn">Next →</button> </div>
+          <div class="calendar-grid" id="calendarDays"></div>
+        </div>
+      </section>
+    </main>
+    <footer>
+      <div class="foot-inner">
+        <p>© 2025 SomJoy Exortic Solutions. All rights reserved.</p>
+      </div>
+    </footer>
+    <div class="event-tooltip" id="eventTooltip"></div>
+    <script src="script.js"></script>
+    <script>
+        // === Academic Events ===
+        const events = {
+            "2025-08-19": "Football Game",
+            "2025-08-20": "Art Exhibition",
+            "2025-09-10": "First Term Begins",
+            "2025-09-25": "Parent-Teacher Meeting",
+            "2025-10-14": "Sports Festival",
+            "2025-11-05": "Mid-Term Break",
+            "2025-11-22": "Science Quiz",
+            "2025-12-03": "Cultural Day",
+            "2025-12-20": "Christmas Vacation",
+            "2026-01-12": "Second Term Begins",
+            "2026-02-20": "Science Fair",
+            "2026-03-15": "Inter-School Debate",
+            "2026-04-01": "Easter Break",
+            "2026-05-10": "Arts & Drama Day",
+            "2026-07-15": "End of Academic Year"
+        };
+
+        const monthYear = document.getElementById("monthYear");
+        const prevBtn = document.getElementById("prevMonth");
+        const nextBtn = document.getElementById("nextMonth");
+        const calDays = document.getElementById("calendarDays");
+        const tooltip = document.getElementById("eventTooltip");
+
+        let current = new Date();
+
+        function renderCalendar() {
+            calDays.innerHTML = "";
+            const year = current.getFullYear();
+            const month = current.getMonth();
+            monthYear.textContent = current.toLocaleDateString(undefined,{month:"long",year:"numeric"});
+
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month+1, 0);
+            const startDay = firstDay.getDay(); // 0=Sun
+            const totalDays = lastDay.getDate();
+
+            // Prev month trailing
+            const prevLast = new Date(year, month, 0).getDate();
+            for (let i=startDay; i>0; i--) {
+                const d = document.createElement("div");
+                d.className="calendar-day other-month";
+                d.textContent = prevLast - i + 1;
+                calDays.appendChild(d);
+            }
+
+            // Current month days
+            for (let d=1; d<=totalDays; d++) {
+                const dateStr = `${year}-${String(month+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+                const cell = document.createElement("div");
+                cell.className="calendar-day";
+                cell.textContent=d;
+
+                if (events[dateStr]) {
+                    cell.classList.add("event");
+                    const label = document.createElement("div");
+                    label.className="label";
+                    label.textContent=events[dateStr];
+                    cell.appendChild(label);
+
+                    // Tooltip
+                    cell.addEventListener("mousemove", e=>{
+                        tooltip.textContent=events[dateStr];
+                        tooltip.style.top=(e.pageY+15)+"px";
+                        tooltip.style.left=(e.pageX+15)+"px";
+                        tooltip.style.opacity=1;
+                    });
+                    cell.addEventListener("mouseleave", ()=>{ tooltip.style.opacity=0; });
+                }
+                calDays.appendChild(cell);
+            }
+
+            // Next month leading
+            const nextDays = 42 - calDays.children.length;
+            for (let i=1; i<=nextDays; i++) {
+                const d = document.createElement("div");
+                d.className="calendar-day other-month";
+                d.textContent=i;
+                calDays.appendChild(d);
+            }
+        }
+
+        renderCalendar();
+        prevBtn.addEventListener("click",()=>{ current.setMonth(current.getMonth()-1); renderCalendar(); });
+        nextBtn.addEventListener("click",()=>{ current.setMonth(current.getMonth()+1); renderCalendar(); });
+    </script>
+  </body>
+</html>

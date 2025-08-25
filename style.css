@@ -1,0 +1,64 @@
+/* ====== Horizon Academy Shared Styles ====== */
+:root{
+    --primary:#1f2d4a;
+    --accent:#f39c12;
+    --bg:#f7f9fc;
+    --text:#2c2f33;
+    --muted:#6b7280;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+
+/* Header */
+header{position:sticky;top:0;z-index:1000;background:var(--primary);color:#fff;box-shadow:0 2px 10px rgba(0,0,0,.1)}
+.header-inner{max-width:1200px;margin:0 auto;padding:.75rem 1rem;display:flex;align-items:center;gap:1rem}
+.brand{display:flex;align-items:center;gap:.6rem;font-weight:800;letter-spacing:.3px}
+.brand svg{width:36px;height:36px}
+.brand span{font-size:1.05rem}
+nav{margin-left:auto;display:flex;gap:.5rem;flex-wrap:wrap}
+nav a{padding:.55rem .9rem;border-radius:.6rem;color:#fff;opacity:.9}
+nav a:hover,nav a.active{background:rgba(255,255,255,.12);opacity:1}
+
+/* Layout */
+.container{max-width:1200px;margin:0 auto;padding:0 1rem}
+section{padding:3rem 0}
+hr.sep{border:0;border-top:1px solid #e5e7eb;margin:2rem 0}
+
+/* Hero */
+.hero{display:grid;gap:1.5rem;align-items:center}
+@media(min-width:900px){.hero{grid-template-columns:1.1fr .9fr}}
+.hero h1{font-size:2.2rem;line-height:1.15;margin:.25rem 0 1rem}
+.hero p{color:var(--muted);max-width:52ch}
+.btn{display:inline-block;background:var(--accent);color:#111;padding:.8rem 1.1rem;border-radius:.8rem;font-weight:700}
+.btn:hover{box-shadow:0 0 12px var(--accent)}
+
+/* Cards / features */
+.grid{display:grid;gap:1rem}
+.grid-3{grid-template-columns:repeat(1,1fr)}
+@media(min-width:720px){.grid-3{grid-template-columns:repeat(3,1fr)}}
+.card{background:#fff;border-radius:1rem;padding:1.25rem;box-shadow:0 6px 20px rgba(31,45,74,.08);transition:transform .3s ease, box-shadow .3s ease}
+.card:hover{transform:scale(1.03);box-shadow:0 12px 28px rgba(31,45,74,.15)}
+.card h3{margin:.2rem 0 .5rem}
+
+/* Footer */
+footer{background:#0f172a;color:#cbd5e1;margin-top:3rem}
+footer .foot-inner{max-width:1200px;margin:0 auto;padding:2rem 1rem;text-align:center}
+
+/* Scroll reveal */
+section,.card,.gallery-item{opacity:0;transform:translateY(40px);transition:all .6s ease}
+.visible{opacity:1!important;transform:translateY(0)!important}
+
+/* Back to top */
+#backToTop{position:fixed;right:18px;bottom:18px;display:none;border:0;border-radius:50%;padding:.65rem 0;width:44px;height:44px;background:var(--accent);color:#fff;font-size:1.1rem;cursor:pointer;box-shadow:0 6px 14px rgba(0,0,0,.2);z-index:1500}
+#backToTop:hover{filter:brightness(.95)}
+
+/* Lightbox (used on gallery.html) */
+#lightbox{position:fixed;inset:0;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s ease;z-index:2000}
+#lightbox.active{opacity:1;pointer-events:auto}
+#lightbox img{max-width:92%;max-height:82%;border-radius:12px;box-shadow:0 0 24px rgba(255,255,255,.25)}
+
+/* Utility */
+.muted{color:var(--muted)}
+.spacer{height:12px}
